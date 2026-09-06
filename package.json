@@ -6,9 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:migrate-marketplace": "node --env-file=.env.local scripts/migrate-marketplace.mjs",
+    "format": "prettier --write src scripts README.md package.json .env.example",
+    "format:check": "prettier --check src scripts README.md package.json .env.example"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
     "next": "16.3.4",
     "react": "19.2.8",
     "react-dom": "19.2.8"
@@ -21,6 +25,7 @@
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.3.4",
+    "prettier": "^3.9.6",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
