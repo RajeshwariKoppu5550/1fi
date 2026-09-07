@@ -11,7 +11,13 @@ export function LoadingCatalog() {
   );
 }
 
-export function ErrorCatalog({ retry }: { retry: () => void }) {
+export function ErrorCatalog({
+  message,
+  retry,
+}: {
+  message: string;
+  retry: () => void;
+}) {
   return (
     <div
       className="grid min-h-[520px] place-content-center justify-items-center text-center"
@@ -21,7 +27,7 @@ export function ErrorCatalog({ retry }: { retry: () => void }) {
       </span>
       <h2 className="my-2 text-xl">We couldn’t load the marketplace.</h2>
       <p className="mb-[17px] text-[13px] text-[#75817c]">
-        Please check your connection and try again.
+        {message}
       </p>
       <button
         type="button"

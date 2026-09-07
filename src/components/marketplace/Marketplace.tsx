@@ -17,6 +17,9 @@ type LoadState = "loading" | "ready" | "error";
 export default function Marketplace() {
   const [section, setSection] = useState<ShopSection>("marketplace");
   const [loadState, setLoadState] = useState<LoadState>("loading");
+  const [loadError, setLoadError] = useState(
+    "The marketplace service is unavailable. Please try again.",
+  );
   const [catalog, setCatalog] = useState<MarketplaceCatalog | null>(null);
   const [category, setCategory] = useState<MarketplaceCategory>("All");
   const [selectedProduct, setSelectedProduct] =
@@ -24,11 +27,21 @@ export default function Marketplace() {
   const loadCatalog = useCallback(async (signal?: AbortSignal) => {
     try {
       const response = await fetch("/api/marketplace", { signal });
-      if (!response.ok) throw new Error("Marketplace request failed");
+      if (!response.ok) {
+        const payload = (await response.json().catch(() => null)) as
+          | { message?: string }
+          | null;
+        throw new Error(payload?.message ?? "Marketplace request failed");
+      }
       setCatalog((await response.json()) as MarketplaceCatalog);
       setLoadState("ready");
     } catch (error) {
       if (error instanceof DOMException && error.name === "AbortError") return;
+      setLoadError(
+        error instanceof Error
+          ? error.message
+          : "The marketplace service is unavailable. Please try again.",
+      );
       setLoadState("error");
     }
   }, []);
@@ -95,6 +108,7 @@ export default function Marketplace() {
               <LoadingCatalog />
             ) : loadState === "error" || !catalog ? (
               <ErrorCatalog
+                message={loadError}
                 retry={() => {
                   setLoadState("loading");
                   void loadCatalog();
