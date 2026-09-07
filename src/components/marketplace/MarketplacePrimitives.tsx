@@ -1,4 +1,5 @@
 import type { MarketplaceProduct } from "@/lib/marketplace-types";
+import Image from "next/image";
 
 export const money = (value: number) =>
   `₹${new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(value)}`;
@@ -54,6 +55,39 @@ export function DeviceArtwork({
   compact?: boolean;
 }) {
   const scale = compact ? "scale-[.82]" : "";
+  const imageByKind = {
+    phone: "/iphone.jpg",
+    laptop: "/macbook.jpg",
+    audio: "/bluetooth.jpg",
+  } as const;
+  const imageSource = imageByKind[product.imageKind];
+  const imageFrame = compact
+    ? "h-full w-full"
+    : "h-[280px] w-full max-w-[520px]";
+  const imageBackground = product.imageKind === "phone" ? "bg-black" : "";
+  const imageFit =
+    product.imageKind === "audio" ? "object-contain" : "object-cover";
+
+  if (imageSource)
+    return (
+      <div
+        className={`relative grid overflow-hidden ${imageFrame} ${imageBackground} place-items-center`}>
+        <Image
+          src={imageSource}
+          alt={product.name}
+          width={520}
+          height={280}
+          sizes={compact ? "220px" : "(max-width: 1024px) 100vw, 520px"}
+          className={`h-full w-full ${imageFit} grayscale drop-shadow-[0_14px_12px_rgba(40,50,47,.2)]`}
+        />
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 mix-blend-color opacity-80"
+          style={{ backgroundColor: accent }}
+        />
+      </div>
+    );
+
   if (product.imageKind === "laptop")
     return (
       <div className={`relative h-[142px] w-[177px] ${scale}`}>
