@@ -26,9 +26,7 @@ export function ErrorCatalog({
         !
       </span>
       <h2 className="my-2 text-xl">We couldn’t load the marketplace.</h2>
-      <p className="mb-[17px] text-[13px] text-[#75817c]">
-        {message}
-      </p>
+      <p className="mb-[17px] text-[13px] text-[#75817c]">{message}</p>
       <button
         type="button"
         onClick={retry}

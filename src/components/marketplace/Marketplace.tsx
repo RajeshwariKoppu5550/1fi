@@ -28,9 +28,9 @@ export default function Marketplace() {
     try {
       const response = await fetch("/api/marketplace", { signal });
       if (!response.ok) {
-        const payload = (await response.json().catch(() => null)) as
-          | { message?: string }
-          | null;
+        const payload = (await response.json().catch(() => null)) as {
+          message?: string;
+        } | null;
         throw new Error(payload?.message ?? "Marketplace request failed");
       }
       setCatalog((await response.json()) as MarketplaceCatalog);
